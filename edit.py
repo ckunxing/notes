@@ -31,6 +31,17 @@ def note_title(path):
         pass
     return os.path.splitext(os.path.basename(path))[0]
 
+def note_excerpt(path, limit=90):
+    try:
+        text = open(path, encoding="utf-8").read()
+    except Exception:
+        return ""
+    text = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", text)
+    text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
+    text = re.sub(r"[#>*`\-]+", "", text)
+    text = " ".join(text.split())
+    return text[:limit]
+
 def list_notes():
     out = []
     for fn in os.listdir(NOTES_DIR):
@@ -41,12 +52,14 @@ def list_notes():
             "file": fn,
             "title": note_title(p),
             "date": datetime.fromtimestamp(os.path.getmtime(p)).strftime("%Y-%m-%d %H:%M"),
+            "excerpt": note_excerpt(p),
         })
     out.sort(key=lambda n: n["date"], reverse=True)
     return out
 
 def rebuild_index():
-    idx = [{"file": n["file"], "title": n["title"], "date": n["date"][:10]} for n in list_notes()]
+    idx = [{"file": n["file"], "title": n["title"], "date": n["date"][:10],
+            "excerpt": n["excerpt"]} for n in list_notes()]
     with open(os.path.join(NOTES_DIR, "index.json"), "w", encoding="utf-8") as f:
         json.dump(idx, f, ensure_ascii=False, indent=1)
     return len(idx)
