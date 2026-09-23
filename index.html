@@ -43,6 +43,11 @@ h1{font-size:17px;font-weight:600;margin:0}
   font-size:15px;outline:none;transition:border-color .15s}
 #search:focus{border-color:var(--accent)}
 #search::placeholder{color:var(--dim)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 0;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;padding:5px 14px;border-radius:999px;border:1px solid var(--line);
+  background:var(--card);color:var(--dim);font-size:13px;white-space:nowrap;cursor:pointer}
+.chip.on{background:var(--text);border-color:var(--text);color:var(--bg);font-weight:600}
 
 main{max-width:640px;margin:0 auto;padding:14px 20px 60px}
 .note-item{background:var(--card);border:1px solid var(--line);border-radius:12px;
@@ -54,8 +59,10 @@ main{max-width:640px;margin:0 auto;padding:14px 20px 60px}
 .ni-arrow{color:var(--dim);font-size:16px;flex:0 0 auto;opacity:.5}
 .ni-excerpt{font-size:13px;color:var(--dim);margin:6px 0 0;line-height:1.7;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ni-date{display:inline-block;margin-top:9px;font-size:12px;color:var(--dim);
-  font-variant-numeric:tabular-nums}
+.ni-meta{display:flex;align-items:center;gap:8px;margin-top:9px}
+.ni-grp{font-size:11.5px;color:var(--accent);background:var(--accent-soft);
+  padding:2px 9px;border-radius:999px}
+.ni-date{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
 .empty{text-align:center;color:var(--dim);padding:80px 20px;font-size:15px}
 
 #reader{display:none}
@@ -96,6 +103,7 @@ main{max-width:640px;margin:0 auto;padding:14px 20px 60px}
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       <input id="search" type="search" placeholder="搜索笔记…" autocomplete="off">
     </div>
+    <div class="chips" id="chips"></div>
   </div>
 </header>
 <main>
@@ -106,24 +114,30 @@ main{max-width:640px;margin:0 auto;padding:14px 20px 60px}
   </div>
 </main>
 <script>
-let notes=[];
+let notes=[], group='', q='';
 const $=id=>document.getElementById(id);
-
+const enc=f=>f.split('/').map(encodeURIComponent).join('/');
 async function init(){
   try{notes=await (await fetch('notes/index.json?t='+Date.now())).json()}catch(e){notes=[]}
-  $('cnt').textContent=notes.length?notes.length+' 篇':'';
-  render('');
+  buildChips(); render();
 }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-function render(q){
-  const arr=notes.filter(n=>!q||n.title.toLowerCase().includes(q.toLowerCase()));
-  $('list').innerHTML=arr.length?arr.map((n,i)=>
-    '<div class="note-item" style="animation-delay:'+Math.min(i*40,300)+'ms" onclick="openNote(\''+encodeURIComponent(n.file)+'\')">'+
-    '<div class="ni-head">'+
-    '<span class="ni-title">'+esc(n.title)+'</span><span class="ni-arrow">›</span></div>'+
+function buildChips(){
+  const groups=[...new Set(notes.map(n=>n.group))];
+  $('chips').innerHTML='<div class="chip'+(group===''?' on':'')+'" data-g="">全部</div>'+
+    groups.map(g=>'<div class="chip'+(group===g?' on':'')+'" data-g="'+esc(g)+'">'+esc(g)+'</div>').join('');
+  $('chips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{group=c.dataset.g;buildChips();render()});
+}
+function render(){
+  const arr=notes.filter(n=>(!group||n.group===group)&&(!q||n.title.toLowerCase().includes(q.toLowerCase())));
+  $('cnt').textContent=arr.length?arr.length+' 篇':'';
+  $('list').innerHTML=arr.length?arr.map(n=>
+    '<div class="note-item" onclick="openNote(\''+enc(n.file)+'\')">'+
+    '<div class="ni-head"><span class="ni-title">'+esc(n.title)+'</span><span class="ni-arrow">›</span></div>'+
     (n.excerpt?'<p class="ni-excerpt">'+esc(n.excerpt)+'</p>':'')+
-    '<span class="ni-date">'+n.date+'</span></div>'
-  ).join(''):'<div class="empty">'+(q?'没有找到相关笔记':'还没有笔记，去电脑上写一篇吧')+'</div>';
+    '<div class="ni-meta">'+(n.group&&n.group!=='未分组'?'<span class="ni-grp">'+esc(n.group)+'</span>':'')+
+    '<span class="ni-date">'+n.date+'</span></div></div>'
+  ).join(''):'<div class="empty">'+(q||group?'没有找到相关笔记':'还没有笔记，去电脑上写一篇吧')+'</div>';
 }
 async function openNote(f){
   $('list').style.display='none';$('reader').style.display='block';window.scrollTo(0,0);
@@ -134,7 +148,7 @@ async function openNote(f){
   }catch(e){$('content').textContent='加载失败'}
 }
 function closeReader(){$('reader').style.display='none';$('list').style.display='block'}
-$('search').addEventListener('input',e=>render(e.target.value.trim()));
+$('search').addEventListener('input',e=>{q=e.target.value.trim();render()});
 init();
 </script>
 </body>
