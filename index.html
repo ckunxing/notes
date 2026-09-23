@@ -7,125 +7,83 @@
 <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
 <style>
 :root{
-  --bg:#f6f1e7; --card:#fffdf7; --line:#e5dccb;
-  --text:#2b2620; --dim:#9a8f7c; --faint:#c9bfa9;
-  --accent:#c0392b; --gold:#a8763e;
-  --serif:"Songti SC","STSong","STZhongsong","Noto Serif SC","SimSun",serif;
-  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --bg:#f7f7f8; --card:#ffffff; --line:#e6e6ea;
+  --text:#1d1d1f; --dim:#86868b; --accent:#0066cc;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
   :root{
-    --bg:#16140f; --card:#201d16; --line:#353023;
-    --text:#e6dfd0; --dim:#8f8672; --faint:#4a4434;
-    --accent:#e0584a; --gold:#c99a5e;
+    --bg:#000000; --card:#1c1c1e; --line:#38383d;
+    --text:#f5f5f7; --dim:#98989d; --accent:#4c9aff;
     color-scheme:dark;
   }
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
-  background-image:radial-gradient(circle at 15% 8%,rgba(192,57,43,.045),transparent 42%),
-                   radial-gradient(circle at 88% 92%,rgba(168,118,62,.05),transparent 45%)}
+body{margin:0;background:var(--bg);color:var(--text);
+  font:16px/1.7 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
 
-/* ── 页头 ── */
-header{max-width:640px;margin:0 auto;padding:calc(34px + env(safe-area-inset-top)) 22px 18px;position:relative}
-.seal{position:absolute;top:calc(30px + env(safe-area-inset-top));right:24px;width:46px;height:46px;
-  background:var(--accent);color:#fff8f0;font-family:var(--serif);font-size:25px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;border-radius:7px;
-  transform:rotate(4deg);box-shadow:0 3px 10px rgba(192,57,43,.3);opacity:.92}
-.kicker{font-size:11px;letter-spacing:4px;color:var(--gold);font-weight:600;margin-bottom:10px}
-header h1{font-family:var(--serif);font-size:34px;font-weight:900;margin:0;letter-spacing:6px}
-.sub{font-size:13px;color:var(--dim);margin-top:8px;letter-spacing:1px}
-.search-wrap{margin-top:22px;position:relative}
-.search-wrap svg{position:absolute;left:2px;top:50%;transform:translateY(-50%);width:16px;height:16px;
-  stroke:var(--faint);fill:none;stroke-width:2}
-#search{width:100%;border:none;border-bottom:1.5px solid var(--line);background:transparent;
-  padding:10px 4px 10px 26px;font-size:15px;color:var(--text);outline:none;font-family:inherit;
-  transition:border-color .2s;border-radius:0}
-#search:focus{border-color:var(--accent)}
-#search::placeholder{color:var(--faint)}
+header{position:sticky;top:0;z-index:20;background:var(--bg);
+  border-bottom:1px solid var(--line);
+  padding:calc(14px + env(safe-area-inset-top)) 20px 12px}
+.h-in{max-width:640px;margin:0 auto}
+.h-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+h1{font-size:20px;font-weight:600;margin:0}
+.cnt{font-size:13px;color:var(--dim)}
+#search{width:100%;padding:9px 14px;border-radius:10px;border:none;
+  background:var(--card);color:var(--text);font-size:15px;outline:none;
+  border:1px solid var(--line)}
+#search::placeholder{color:var(--dim)}
 
-/* ── 列表 ── */
-main{max-width:640px;margin:0 auto;padding:6px 22px 70px}
-.note-item{display:block;padding:22px 4px;border-bottom:1px solid var(--line);cursor:pointer;
-  animation:rise .35s ease both}
-@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.note-item:active{background:linear-gradient(90deg,rgba(192,57,43,.04),transparent)}
-.ni-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-.note-item h2{font-family:var(--serif);font-size:20px;font-weight:700;margin:0;line-height:1.5;
-  transition:color .15s}
-.note-item:hover h2{color:var(--accent)}
-.ni-date{font-size:11.5px;color:var(--faint);font-family:ui-monospace,Menlo,monospace;
-  white-space:nowrap;letter-spacing:.5px}
-.ni-excerpt{font-size:13.5px;color:var(--dim);margin:8px 0 0;line-height:1.8;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.empty{text-align:center;color:var(--dim);padding:80px 20px;font-family:var(--serif);font-size:17px}
-.empty::before{content:"﹀";display:block;font-size:22px;color:var(--faint);margin-bottom:14px}
+main{max-width:640px;margin:0 auto;padding:12px 20px 60px}
+.note-item{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:15px 16px;margin-bottom:10px;cursor:pointer}
+.note-item:active{opacity:.6}
+.ni-title{font-size:16px;font-weight:500;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+.ni-date{font-size:13px;color:var(--dim);white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.empty{text-align:center;color:var(--dim);padding:80px 20px;font-size:15px}
 
-/* ── 阅读页 ── */
 #reader{display:none}
-.back{display:inline-flex;align-items:center;gap:6px;margin:14px 0 6px;padding:7px 0;
-  color:var(--accent);font-size:14px;font-weight:600;cursor:pointer;letter-spacing:1px}
-.back::before{content:"←";font-size:16px}
-.r-head{text-align:center;padding:18px 0 8px;border-bottom:1px solid var(--line);margin-bottom:26px}
-.r-title{font-family:var(--serif);font-size:27px;font-weight:900;line-height:1.5;margin:0}
-.r-date{font-size:12px;color:var(--dim);margin-top:12px;letter-spacing:2px;
-  display:flex;align-items:center;justify-content:center;gap:12px}
-.r-date::before,.r-date::after{content:"";width:34px;height:1px;background:var(--faint)}
-#content{font-family:var(--serif);font-size:17px;line-height:2.05;overflow-wrap:break-word;
-  padding-bottom:30px}
-#content h1,#content h2,#content h3{font-family:var(--serif);line-height:1.6;margin:1.6em 0 .7em;font-weight:900}
-#content h1{font-size:23px;text-align:center}
-#content h2{font-size:20px;padding-left:12px;border-left:4px solid var(--accent)}
-#content h3{font-size:17.5px}
-#content h1:first-child{display:none}
-#content p{margin:1em 0}
-#content>p:first-of-type::first-letter{font-size:2.1em;font-weight:900;color:var(--accent);
-  float:left;line-height:1.1;padding:2px 8px 0 0;font-family:var(--serif)}
-#content strong{color:var(--accent);font-weight:700}
-#content blockquote{margin:1.4em 0;padding:4px 0 4px 18px;border-left:3px solid var(--gold);
-  color:var(--dim);font-style:italic;position:relative}
-#content img{max-width:100%;border-radius:8px;box-shadow:0 4px 18px rgba(0,0,0,.12)}
-#content pre{background:#2b2620;color:#e8e0cf;border-radius:10px;padding:14px 16px;
-  overflow-x:auto;font-size:13.5px;line-height:1.7;font-family:ui-monospace,Menlo,Consolas,monospace}
+.back{display:inline-block;margin:4px 0 16px;color:var(--accent);font-size:15px;cursor:pointer}
+.back::before{content:"‹ ";font-weight:600}
+#content{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:22px 20px;overflow-wrap:break-word;font-size:16px}
+#content h1{font-size:22px;margin:0 0 4px;font-weight:600}
+#content h2{font-size:18px;margin:1.6em 0 .6em;font-weight:600}
+#content h3{font-size:16px;margin:1.4em 0 .5em;font-weight:600}
+#content p{margin:.9em 0}
+#content img{max-width:100%;border-radius:8px}
+#content pre{background:#f5f5f7;border-radius:8px;padding:12px 14px;overflow-x:auto;
+  font-size:13.5px;line-height:1.6;font-family:ui-monospace,Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){#content pre{background:#2c2c2e}}
 #content code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em}
-#content p code,#content li code{background:var(--card);border:1px solid var(--line);
-  padding:1px 7px;border-radius:5px;color:var(--accent)}
-#content table{border-collapse:collapse;width:100%;font-size:14.5px;margin:1.4em 0}
-#content th{background:var(--card);font-weight:700}
-#content th,#content td{border:1px solid var(--line);padding:8px 12px}
-#content a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--faint)}
-#content hr{border:none;text-align:center;margin:2.2em 0}
-#content hr::before{content:"· · ·";letter-spacing:8px;color:var(--faint);font-size:18px}
-#content ul,#content ol{padding-left:1.5em}
-#content li{margin:.35em 0}
-#content li::marker{color:var(--accent)}
-.r-end{text-align:center;color:var(--faint);font-size:12px;letter-spacing:3px;padding:26px 0 10px}
-.r-end::before{content:"";display:block;width:52px;height:1px;background:var(--faint);margin:0 auto 14px}
+#content p code,#content li code{background:rgba(128,128,128,.12);padding:1px 6px;
+  border-radius:5px}
+#content blockquote{margin:1em 0;padding:2px 0 2px 14px;border-left:3px solid var(--line);
+  color:var(--dim)}
+#content table{border-collapse:collapse;width:100%;font-size:14.5px;margin:1em 0}
+#content th,#content td{border:1px solid var(--line);padding:7px 11px;text-align:left}
+#content a{color:var(--accent);text-decoration:none}
+#content hr{border:none;border-top:1px solid var(--line);margin:1.8em 0}
+#content ul,#content ol{padding-left:1.4em}
+#content li{margin:.3em 0}
 </style>
 </head>
 <body>
 <header>
-  <div class="seal">记</div>
-  <div class="kicker">RECORDS · NOTES</div>
-  <h1>我的笔记</h1>
-  <div class="sub" id="cnt"></div>
-  <div class="search-wrap">
-    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    <input id="search" type="search" placeholder="搜索标题…" autocomplete="off">
+  <div class="h-in">
+    <div class="h-row"><h1>我的笔记</h1><span class="cnt" id="cnt"></span></div>
+    <input id="search" type="search" placeholder="搜索" autocomplete="off">
   </div>
 </header>
 <main>
   <div id="list"></div>
   <div id="reader">
-    <span class="back" onclick="closeReader()">返回目录</span>
-    <div class="r-head">
-      <h1 class="r-title" id="rTitle"></h1>
-      <div class="r-date" id="rDate"></div>
-    </div>
+    <span class="back" onclick="closeReader()">返回</span>
     <div id="content"></div>
-    <div class="r-end">— 完 —</div>
   </div>
 </main>
 <script>
@@ -133,32 +91,27 @@ let notes=[];
 const $=id=>document.getElementById(id);
 async function init(){
   try{notes=await (await fetch('notes/index.json?t='+Date.now())).json()}catch(e){notes=[]}
-  $('cnt').textContent=notes.length?'共 '+notes.length+' 篇 · 持续记录中':'';
+  $('cnt').textContent=notes.length?notes.length+' 篇':'';
   render('');
 }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function render(q){
   const arr=notes.filter(n=>!q||n.title.toLowerCase().includes(q.toLowerCase()));
-  $('list').innerHTML=arr.length?arr.map((n,i)=>
-    '<div class="note-item" style="animation-delay:'+Math.min(i*50,400)+'ms" onclick="openNote(\''+encodeURIComponent(n.file)+'\')">'+
-    '<div class="ni-top"><h2>'+esc(n.title)+'</h2><span class="ni-date">'+n.date+'</span></div>'+
-    (n.excerpt?'<p class="ni-excerpt">'+esc(n.excerpt)+'</p>':'')+
-    '</div>'
-  ).join(''):'<div class="empty">'+(q?'没有找到相关笔记':'一纸空白，待君落笔')+'</div>';
+  $('list').innerHTML=arr.length?arr.map(n=>
+    '<div class="note-item" onclick="openNote(\''+encodeURIComponent(n.file)+'\')">'+
+    '<span class="ni-title">'+esc(n.title)+'</span>'+
+    '<span class="ni-date">'+n.date+'</span></div>'
+  ).join(''):'<div class="empty">'+(q?'无结果':'暂无笔记')+'</div>';
 }
 async function openNote(f){
-  const n=notes.find(x=>encodeURIComponent(x.file)===f);
-  $('list').style.display='none';document.querySelector('.search-wrap').style.visibility='hidden';
-  $('reader').style.display='block';window.scrollTo(0,0);
-  $('rTitle').textContent=n?n.title:'';$('rDate').textContent=n?n.date:'';
+  $('list').style.display='none';$('reader').style.display='block';window.scrollTo(0,0);
   $('content').innerHTML='';
   try{
     const md=await (await fetch('notes/'+f+'?t='+Date.now())).text();
     $('content').innerHTML=window.marked?marked.parse(md):'<pre>'+esc(md)+'</pre>';
   }catch(e){$('content').textContent='加载失败'}
 }
-function closeReader(){$('reader').style.display='none';$('list').style.display='block';
-  document.querySelector('.search-wrap').style.visibility='visible'}
+function closeReader(){$('reader').style.display='none';$('list').style.display='block'}
 $('search').addEventListener('input',e=>render(e.target.value.trim()));
 init();
 </script>
