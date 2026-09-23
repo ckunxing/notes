@@ -7,16 +7,16 @@
 <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
 <style>
 :root{
-  --bg:#eef1f6; --card:#ffffff; --line:#e4e8f0;
-  --text:#1f2430; --dim:#7a8499; --accent:#4f6ef7; --accent-soft:#eef1fe;
-  --shadow:0 1px 3px rgba(30,40,80,.06),0 6px 20px rgba(30,40,80,.06);
+  --bg:#f4f4f2; --card:#ffffff; --line:#e7e7e4;
+  --text:#26262a; --dim:#8a8a90; --accent:#5c6b7a; --accent-soft:#eef0f1;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 14px rgba(0,0,0,.04);
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
   :root{
-    --bg:#101318; --card:#1a1e27; --line:#2a2f3d;
-    --text:#e8eaf2; --dim:#8b93a8; --accent:#7b92ff; --accent-soft:#232a3f;
-    --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+    --bg:#141516; --card:#1d1e20; --line:#2e3033;
+    --text:#e2e2e4; --dim:#8e9095; --accent:#9aa7b3; --accent-soft:#26282b;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
     color-scheme:dark;
   }
 }
@@ -31,79 +31,66 @@ header{position:sticky;top:0;z-index:20;
   padding:calc(12px + env(safe-area-inset-top)) 20px 12px;border-bottom:1px solid var(--line)}
 .h-in{max-width:640px;margin:0 auto}
 .h-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#8b5cf6);
-  display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 auto;
-  box-shadow:0 3px 8px rgba(79,110,247,.35)}
-h1{font-size:18px;font-weight:700;margin:0}
-.cnt{margin-left:auto;font-size:12.5px;color:var(--dim);background:var(--card);
-  border:1px solid var(--line);padding:3px 10px;border-radius:999px}
+.logo{width:28px;height:28px;border-radius:8px;background:var(--text);color:var(--bg);
+  display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 auto}
+h1{font-size:17px;font-weight:600;margin:0}
+.cnt{margin-left:auto;font-size:12px;color:var(--dim)}
 .search-wrap{position:relative}
-.search-wrap svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);
+.search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);
   width:15px;height:15px;stroke:var(--dim);fill:none;stroke-width:2.2;pointer-events:none}
-#search{width:100%;padding:10px 14px 10px 38px;border-radius:12px;
+#search{width:100%;padding:9px 14px 9px 36px;border-radius:10px;
   border:1px solid var(--line);background:var(--card);color:var(--text);
-  font-size:15px;outline:none;box-shadow:var(--shadow);transition:border-color .15s}
+  font-size:15px;outline:none;transition:border-color .15s}
 #search:focus{border-color:var(--accent)}
 #search::placeholder{color:var(--dim)}
 
-main{max-width:640px;margin:0 auto;padding:16px 20px 60px}
-.note-item{background:var(--card);border:1px solid var(--line);border-radius:16px;
-  padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow);cursor:pointer;
-  transition:transform .12s,box-shadow .12s;animation:rise .3s ease both}
-@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.note-item:active{transform:scale(.985)}
+main{max-width:640px;margin:0 auto;padding:14px 20px 60px}
+.note-item{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:15px 17px;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer}
+.note-item:active{opacity:.65}
 .ni-head{display:flex;align-items:center;gap:10px}
-.ni-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
-.ni-title{font-size:16.5px;font-weight:600;flex:1;overflow:hidden;
+.ni-title{font-size:16px;font-weight:600;flex:1;overflow:hidden;
   text-overflow:ellipsis;white-space:nowrap}
-.ni-arrow{color:var(--dim);font-size:18px;flex:0 0 auto}
-.ni-excerpt{font-size:13.5px;color:var(--dim);margin:8px 0 0;line-height:1.7;
+.ni-arrow{color:var(--dim);font-size:16px;flex:0 0 auto;opacity:.5}
+.ni-excerpt{font-size:13px;color:var(--dim);margin:6px 0 0;line-height:1.7;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ni-date{display:inline-block;margin-top:10px;font-size:12px;color:var(--dim);
-  background:var(--accent-soft);color:var(--accent);padding:2px 10px;border-radius:999px;
+.ni-date{display:inline-block;margin-top:9px;font-size:12px;color:var(--dim);
   font-variant-numeric:tabular-nums}
 .empty{text-align:center;color:var(--dim);padding:80px 20px;font-size:15px}
 
 #reader{display:none}
-.back{display:inline-flex;align-items:center;gap:4px;margin:2px 0 14px;padding:7px 14px;
-  background:var(--card);border:1px solid var(--line);border-radius:999px;
-  color:var(--accent);font-size:14px;font-weight:600;cursor:pointer;box-shadow:var(--shadow)}
-.back::before{content:"←"}
-#content{background:var(--card);border:1px solid var(--line);border-radius:16px;
-  padding:26px 22px;overflow-wrap:break-word;box-shadow:var(--shadow)}
-#content h1{font-size:23px;margin:0 0 6px;font-weight:700;line-height:1.4}
-#content h2{font-size:18.5px;margin:1.7em 0 .7em;font-weight:700;
-  display:flex;align-items:center;gap:8px}
-#content h2::before{content:"";width:4px;height:17px;border-radius:2px;
-  background:linear-gradient(180deg,var(--accent),#8b5cf6)}
-#content h3{font-size:16.5px;margin:1.4em 0 .5em;font-weight:600}
+.back{display:inline-block;margin:2px 0 12px;color:var(--accent);
+  font-size:14px;font-weight:500;cursor:pointer}
+.back::before{content:"‹ "}
+#content{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:22px 20px;overflow-wrap:break-word;box-shadow:var(--shadow)}
+#content h1{font-size:21px;margin:0 0 6px;font-weight:600;line-height:1.4}
+#content h2{font-size:18px;margin:1.6em 0 .6em;font-weight:600;padding-bottom:6px;
+  border-bottom:1px solid var(--line)}
+#content h3{font-size:16px;margin:1.4em 0 .5em;font-weight:600}
 #content p{margin:1em 0}
-#content strong{color:var(--accent)}
-#content img{max-width:100%;border-radius:10px;box-shadow:var(--shadow)}
-#content pre{background:#1f2430;color:#e8eaf2;border-radius:10px;padding:14px 16px;
+#content img{max-width:100%;border-radius:8px}
+#content pre{background:#2a2b2d;color:#e2e2e4;border-radius:8px;padding:13px 15px;
   overflow-x:auto;font-size:13.5px;line-height:1.7;font-family:ui-monospace,Menlo,Consolas,monospace}
 #content code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em}
-#content p code,#content li code{background:var(--accent-soft);color:var(--accent);
-  padding:1px 7px;border-radius:6px;font-weight:500}
-#content blockquote{margin:1.2em 0;padding:12px 16px;border-radius:0 12px 12px 0;
-  background:var(--accent-soft);border-left:3px solid var(--accent);color:var(--dim)}
-#content blockquote p{margin:.3em 0}
-#content table{border-collapse:collapse;width:100%;font-size:14.5px;margin:1.2em 0}
-#content th{background:var(--accent-soft);color:var(--accent);font-weight:600}
-#content th,#content td{border:1px solid var(--line);padding:8px 12px;text-align:left}
-#content a{color:var(--accent);text-decoration:none;font-weight:500}
-#content hr{border:none;height:1px;margin:2em 0;
-  background:linear-gradient(90deg,transparent,var(--line),transparent)}
+#content p code,#content li code{background:var(--accent-soft);
+  padding:1px 6px;border-radius:5px}
+#content blockquote{margin:1.1em 0;padding:2px 0 2px 14px;
+  border-left:2px solid var(--dim);color:var(--dim)}
+#content table{border-collapse:collapse;width:100%;font-size:14.5px;margin:1.1em 0}
+#content th{background:var(--accent-soft);font-weight:600}
+#content th,#content td{border:1px solid var(--line);padding:7px 11px;text-align:left}
+#content a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+#content hr{border:none;border-top:1px solid var(--line);margin:1.8em 0}
 #content ul,#content ol{padding-left:1.4em}
-#content li{margin:.35em 0}
-#content li::marker{color:var(--accent)}
+#content li{margin:.3em 0}
 </style>
 </head>
 <body>
 <header>
   <div class="h-in">
     <div class="h-row">
-      <div class="logo">📓</div><h1>我的笔记</h1><span class="cnt" id="cnt"></span>
+      <div class="logo">记</div><h1>我的笔记</h1><span class="cnt" id="cnt"></span>
     </div>
     <div class="search-wrap">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
@@ -121,7 +108,7 @@ main{max-width:640px;margin:0 auto;padding:16px 20px 60px}
 <script>
 let notes=[];
 const $=id=>document.getElementById(id);
-const COLORS=['#4f6ef7','#8b5cf6','#0ea5e9','#10b981','#f59e0b','#ef4444','#ec4899'];
+
 async function init(){
   try{notes=await (await fetch('notes/index.json?t='+Date.now())).json()}catch(e){notes=[]}
   $('cnt').textContent=notes.length?notes.length+' 篇':'';
@@ -132,7 +119,7 @@ function render(q){
   const arr=notes.filter(n=>!q||n.title.toLowerCase().includes(q.toLowerCase()));
   $('list').innerHTML=arr.length?arr.map((n,i)=>
     '<div class="note-item" style="animation-delay:'+Math.min(i*40,300)+'ms" onclick="openNote(\''+encodeURIComponent(n.file)+'\')">'+
-    '<div class="ni-head"><span class="ni-dot" style="background:'+COLORS[i%COLORS.length]+'"></span>'+
+    '<div class="ni-head">'+
     '<span class="ni-title">'+esc(n.title)+'</span><span class="ni-arrow">›</span></div>'+
     (n.excerpt?'<p class="ni-excerpt">'+esc(n.excerpt)+'</p>':'')+
     '<span class="ni-date">'+n.date+'</span></div>'
