@@ -1,4 +1,3 @@
 @echo off
-cd /d "%~dp0"
-start "" pythonw edit.py
+start "" "C:\Users\buerc\AppData\Local\Programs\Python\Python311\pythonw.exe" "%~dp0edit.py"
 exit
