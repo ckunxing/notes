@@ -145,6 +145,11 @@ async function openNote(f){
   try{
     const md=await (await fetch('notes/'+f+'?t='+Date.now())).text();
     $('content').innerHTML=window.marked?marked.parse(md):'<pre>'+esc(md)+'</pre>';
+    $('content').querySelectorAll('img').forEach(im=>{
+      const s=im.getAttribute('src')||'';
+      if(/^(https?:|data:|notes\/)/.test(s))return;
+      im.src='notes/'+s.replace(/^(\.\.?\/)+/,'');
+    });
   }catch(e){$('content').textContent='加载失败'}
 }
 function closeReader(){$('reader').style.display='none';$('list').style.display='block'}
